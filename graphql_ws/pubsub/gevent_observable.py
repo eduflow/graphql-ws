@@ -2,9 +2,9 @@ import pickle
 
 import gevent
 import redis
-
-from rx.subjects import Subject
+from gevent import socket
 from rx import config
+from rx.subjects import Subject
 
 
 class SubjectObserversWrapper(object):
@@ -56,7 +56,7 @@ class GeventRxPubsub(object):
 class GeventRxRedisPubsub(object):
 
     def __init__(self, host='localhost', port=6379, *args, **kwargs):
-        redis.connection.socket = gevent.socket
+        redis.connection.socket = socket
         self.redis = redis.StrictRedis(host, port, *args, **kwargs)
         self.pubsub = self.redis.pubsub(ignore_subscribe_messages=True)
         self.subscriptions = {}
