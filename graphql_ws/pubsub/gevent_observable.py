@@ -55,9 +55,12 @@ class GeventRxPubsub(object):
 
 class GeventRxRedisPubsub(object):
 
-    def __init__(self, host='localhost', port=6379, *args, **kwargs):
+    def __init__(self, host='localhost', port=6379, url=None, *args, **kwargs):
         redis.connection.socket = socket
-        self.redis = redis.StrictRedis(host, port, *args, **kwargs)
+        if url is not None:
+            self.redis = redis.from_url(url, *args, **kwargs)
+        else:
+            self.redis = redis.StrictRedis(host, port, *args, **kwargs)
         self.pubsub = self.redis.pubsub(ignore_subscribe_messages=True)
         self.subscriptions = {}
         self.greenlet = None
